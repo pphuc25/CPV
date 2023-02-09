@@ -91,7 +91,7 @@ def create_salt_pepper_noise(img):
 	return img
   
 # Function 1 của tui chắc hiểu sai đề á. Của Trung chắc đúng rồi á
-# Có gì lấy của Trung nhen :>
+# Có gì lấy của Trung nhe :>
 original = cv2.imread("1259119.jpg")
 p = 0.25
 new_width = int(original.shape[1] * p)
