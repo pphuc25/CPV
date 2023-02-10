@@ -56,7 +56,15 @@ def simplest_color_balance(img, percent):
         normalized = cv2.normalize(thresholded, thresholded.copy(), 0, 255, cv2.NORM_MINMAX)
         out_channels.append(normalized)
 
-    return cv2.merge(out_channels)
+    result = cv2.merge(out_channels)
+
+    # Display the original image
+    cv2.imshow('Origin', image)
+
+    # Display the result image
+    cv2.imshow('Result', result)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
 
 def histogram_equalization(image):
     hist, bins = np.histogram(image.flatten(), 256, [0, 256])
@@ -66,7 +74,25 @@ def histogram_equalization(image):
     plt.hist(image.flatten(), 256, [0, 256], color='r')
     plt.xlim([0, 256])
     plt.legend(('cdf', 'histogram'), loc='upper left')
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    # Using calcHist to calculate the distribution
+    hist1 = cv2.calcHist([image], [0], None, [256], [0, 256])
+    # Using equalizeHist to increase globalcontrast
+    result = cv2.equalizeHist(image)
+    hist2 = cv2.calcHist([result], [0], None, [256], [0, 256])
+
+    # Display the before and after histogram
+    plt.subplot(222), plt.plot(hist1)
+    plt.subplot(224), plt.plot(hist2)
     plt.show()
+
+    # Display the original image
+    cv2.imshow('Origin', image)
+
+    # Display the result image
+    cv2.imshow('Result', result)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
 
 def add_salt_and_pepper_noise(img):
     # Getting the dimensions of the image
@@ -106,37 +132,47 @@ def add_salt_and_pepper_noise(img):
 def median_filter(image):
     # Add salt and pepper noise
     image = add_salt_and_pepper_noise(image)
-    # Display salt and pepper noise pic
-    cv2.imshow('Salt and pepper noise', image)
+    # Perform median filtering to remove salt and pepper noise
+    result = cv2.medianBlur(image, 3)
+    # Display the original image
+    cv2.imshow('Origin', image)
+
+    # Display the result image
+    cv2.imshow('Result', result)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
-    # Perform median filtering to remove salt and pepper noise
-    return cv2.medianBlur(image, 3)
 
 
 def mean_filter(image):
     # Add salt and pepper noise
     image = add_salt_and_pepper_noise(image)
-    # Display salt and pepper noise pic
-    cv2.imshow('Salt and pepper noise', image)
+    # Perform mean filtering to remove salt and pepper noise
+    result = cv2.blur(image, (3, 3))
+    # Display the original image
+    cv2.imshow('Origin', image)
+
+    # Display the result image
+    cv2.imshow('Result', result)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
-    # Perform mean filtering to remove salt and pepper noise
-    return cv2.blur(image, (3, 3))
 
 
 def gaussian_smoothing(image):
     # Perform Gaussian smoothing to perform image smoothing
-    return cv2.GaussianBlur(image, (3, 3), 0)
+    result = cv2.GaussianBlur(image, (3, 3), 0)
+
+    # Display the original image
+    cv2.imshow('Origin', image)
+
+    # Display the result image
+    cv2.imshow('Result', result)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
 
 
 if __name__ == '__main__':
     image = cv2.imread('chess.png')
     result = image.copy()
-    # Display the original image
-    cv2.imshow('Origin', image)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
 
     while True:
         print('Menu:')
@@ -153,7 +189,7 @@ if __name__ == '__main__':
         if choice == 1:
             # Perform color balance
             percent = float(input('Enter percent value: '))
-            result = simplest_color_balance(result, percent)
+            simplest_color_balance(result, percent)
 
         elif choice == 2:
             # Perform histogram equalization
@@ -161,15 +197,15 @@ if __name__ == '__main__':
 
         elif choice == 3:
             # Perform median filtering
-            result = median_filter(result)
+            median_filter(result)
 
         elif choice == 4:
             # Perform mean filtering
-            result = mean_filter(result)
+            mean_filter(result)
 
         elif choice == 5:
             # Perform Gaussian smoothing
-            result = gaussian_smoothing(result)
+            gaussian_smoothing(result)
 
         elif choice == 6:
             # Back to origin image
@@ -181,8 +217,5 @@ if __name__ == '__main__':
         else:
             print('Invalid choice. Try again.')
 
-        # Display the result image
-        cv2.imshow('Result', result)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
+
 
