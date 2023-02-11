@@ -55,7 +55,8 @@ def median_filter(image):
     return median_filter_image
 
 if __name__ == "__main__":
-    origin_image = cv2.imread('/home/pphuc/Coding/Project/FPTU/CPV/CPV/Workshop2/Anh_nude_1.jpg')
+    path_image = '/home/pphuc/Coding/Project/FPTU/CPV/CPV/images/Anh_nude_1.jpg'
+    origin_image = cv2.imread(path_image)
     image = origin_image.copy()
     
     choice = int(input('Type the choice: '))
