@@ -84,9 +84,9 @@ class HarrisCornerDetection:
         cv2.destroyAllWindows()
         
 
-img_path = 'images/test_CPV.jpeg'
+img_path = 'images/bookcase-chairs-clean-decor.jpeg'
 image = cv2.imread(img_path)
-harris = HarrisCornerDetection(image, 0.85)
+harris = HarrisCornerDetection(image, 0.7)
 
 # plt.figure(figsize=(20, 20))
 # plt.subplot(121), plt.imshow(img)
