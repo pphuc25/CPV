@@ -3,14 +3,9 @@ import cv2
 import matplotlib.pyplot as plt
 import math
 from pylab import*
-from dataclasses import dataclass
 from typing import Any
 
-@dataclass
 class Snack:
-    raw_image: Any
-    threshold: int
-
     def __init__(self, raw_image, threshold):
         self.raw_image = raw_image
         self.threshold = threshold
