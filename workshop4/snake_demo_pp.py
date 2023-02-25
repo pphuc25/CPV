@@ -72,6 +72,3 @@ class Snack:
         cv2.imshow("Image with contour", image_with_contour)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
-
-image = cv2.imread('/home/pphuc/Coding/FPTU/CPV/CPV/images/Anh_nude_1.jpg')
-Snack(image)
