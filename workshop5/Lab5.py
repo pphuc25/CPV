@@ -67,7 +67,7 @@ image2 = cv2.imread("book2.png")
 # aligned_img = ransac_image_alignment(img1, img2, 'ORB', 'BFMatcher')
 
 # Create the window
-window_name = 'Alignment Imgae'
+window_name = 'Alignment Image'
 cv2.namedWindow(window_name)
 
 # Combine the images horizontally
