@@ -31,4 +31,4 @@ url2 = 'D:\FPT\SPRING23\CPV301\CPV301_code\lab6\images\images\P1010520.JPG'
 image_paths=[url1, url2]
 imgs = []
 # stitching 2 image and resize the result to 60% of the original result image
-image_stitching(image_paths, imgs, 100)
+image_stitching(image_paths, imgs, 60)
