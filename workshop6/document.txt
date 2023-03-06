@@ -1,2 +1,4 @@
 Image Stitching to create a Panorama: https://medium.com/@navekshasood/image-stitching-to-create-a-panorama-5e030ecc8f7
 Data set: https://cs.adelaide.edu.au/~tjchin/apap/  (We're using is Dataset1)
+
+lab6.py not working due to sift function can only be used with the old version of openCV
