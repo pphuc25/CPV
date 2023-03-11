@@ -14,7 +14,7 @@ def input_image():
     # Open the webcam
     cap = cv2.VideoCapture(0)
 
-    # Loop over frames from the webcam and save 10 images
+    # Loop over frames from the webcam and save 100 images
     for j in range(100):
         # Capture a frame from the webcam
         ret, frame = cap.read()
