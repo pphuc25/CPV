@@ -22,7 +22,7 @@ def image_stitching(img_1, img_2, percent=100):
     img1 = cv2.cvtColor(img_1,cv2.COLOR_BGR2GRAY)
     img2 = cv2.cvtColor(img_2,cv2.COLOR_BGR2GRAY)
 
-    sift = cv2.xfeatures2d.SIFT_create()
+    sift = cv2.SIFT_create()
     kp1, des1 = sift.detectAndCompute(img1,None)
     kp2, des2 = sift.detectAndCompute(img2,None)
     bf = cv2.BFMatcher()
@@ -62,8 +62,8 @@ def on_button_click(event, x, y, flags, param):
                 button_text = 'STITCHING'
                 stitching_image = cv2.hconcat([img_1, img_2])
 
-url1 = 'images\P1010517.JPG'
-url2 = 'images\P1010520.JPG'
+url1 = 'images/test1/P1010517.JPG'
+url2 = 'images/test1/P1010520.JPG'
 
 img_1 = cv2.imread(url1)
 img_2 = cv2.imread(url2)
