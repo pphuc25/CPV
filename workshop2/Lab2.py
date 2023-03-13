@@ -116,7 +116,8 @@ def histogram_equalization(img):
 
     plt.show()
 
-def add_salt_and_pepper_noise(img):
+def add_salt_and_pepper_noise(raw_img):
+    img = raw_img.copy()
     # Getting the dimensions of the image
     row, col = img.shape[:2]
 
@@ -176,6 +177,8 @@ def gaussian_blur(image, kernel_size, sigma):
     return result
 
 def median_filtering(image, kernel_size):
+    #Turn image into gray
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     kernel_half = kernel_size // 2
     padded_image = np.pad(image, kernel_half, mode='edge')
     median_filter_image = np.zeros(image.shape)
@@ -192,11 +195,10 @@ def median_filtering(image, kernel_size):
 
     return median_filter_image
 
-def median_filter(image):
+def median_filter(raw_image):
+    image = raw_image
     # Add salt and pepper noise
     image = add_salt_and_pepper_noise(image)
-    #Turn image into gray
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     # Perform median filtering to remove salt and pepper noise
     result = median_filtering(image, 3)
     # Display the original image
@@ -223,7 +225,8 @@ def MeanFilter(image):
             result = 0
     return output
 
-def mean_filter(image):
+def mean_filter(raw_image):
+    image = raw_image
     # Add salt and pepper noise
     image = add_salt_and_pepper_noise(image)
     # Perform mean filtering to remove salt and pepper noise
@@ -237,10 +240,10 @@ def mean_filter(image):
     cv2.destroyAllWindows()
 
 
-def gaussian_smoothing(image):
+def gaussian_smoothing(raw_image):
+    image = raw_image
     # Perform Gaussian smoothing to perform image smoothing
-    cv2.imshow('First', image)
-    result = gaussian_blur(image, 3, 0.00001)
+    result = gaussian_blur(image, 3, 0.000001)
 
     # Display the original image
     cv2.imshow('Origin', image)

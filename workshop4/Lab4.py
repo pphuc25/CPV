@@ -145,7 +145,7 @@ def mean_shift_peak_detection(K):
     counter = 0
     iter = 1.0
 
-    threshold = 30
+    threshold = 120
     current_mean_random = True
     current_mean_arr = np.zeros((1, 5))
     below_threshold_arr = []
@@ -289,14 +289,10 @@ def mean_shift_peak_detection(K):
             current_mean_arr[0][3] = mean_i
             current_mean_arr[0][4] = mean_j
 
-            # cv2.imwrite("image"+ str(len(below_threshold_arr)) +".png", K)
-
-        # if(len(total_array) >= 40000):
-        # break
-    cv2.imshow('Before', K)
-    cv2.imshow('After', R)
-    cv2.waitKey(0)  # Wait for any key press
-    cv2.destroyAllWindows()  # Close all windows
+    cv2.imshow('before', K)
+    cv2.imshow('after', R)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
 
 def main():
     print("Welcome to Image Processing Functions")

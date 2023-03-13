@@ -99,6 +99,6 @@ def HOG():
     ax1.set_adjustable('box')
     plt.show()
 
-image_path = '/home/pphuc/Coding/Project/FPTU/CPV/CPV/images/sofas.jpg'
-image = cv2.imread(image_path)
-HOG()
+# image_path = '/home/pphuc/Coding/Project/FPTU/CPV/CPV/images/sofas.jpg'
+# image = cv2.imread(image_path)
+# HOG()
