@@ -1,3 +1,5 @@
+# NOTE: lab6.2.py only working if using python==3.8.10 and opencv-contrib-python==4.4.0.46
+
 import os
 import cv2
 import numpy as np     

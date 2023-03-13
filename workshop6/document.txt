@@ -3,6 +3,6 @@ Data set: https://cs.adelaide.edu.au/~tjchin/apap/  (We're using is Dataset1)
 
 lab6.py not working due to sift function can only be used with the old version of openCV
 
-lab6.2.py is only working if using python==3.8.10 and opencv-contrib-python==4.4.0.46
+lab6.2.py only working if using python==3.8.10 and opencv-contrib-python==4.4.0.46
 Code explaination: https://www.scribd.com/document/510892625/Panorama-Stitching-P2#
 Check this link on how to create a new environment in vscode: https://code.visualstudio.com/docs/python/environments
