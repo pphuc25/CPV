@@ -27,7 +27,7 @@ if __name__ == "__main__":
         elif choice == "2":
             result, theta = task2(image)
             cv2.imshow('Origin', image)
-            cv2.imshow('Canny', result)
+            cv2.imshow('HOG', result)
             cv2.waitKey(0)
         elif choice == "3":
             canny_img = Canny_detector(image, 30, 50)
