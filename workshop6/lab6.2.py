@@ -256,7 +256,7 @@ def main_prog():
         StitchedImage = StitchImages(BaseImage, Images[i])
         BaseImage = StitchedImage.copy()    
 
-    BaseImage = resize(BaseImage, 30)
+    BaseImage = resize(BaseImage, 100)
     cv2.imshow("Stitched_Panorama", BaseImage)
     cv2.waitKey()
     cv2.destroyAllWindows()

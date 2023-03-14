@@ -2,12 +2,10 @@ import csv
 import cv2
 import numpy as np
 import pandas as pd
-import datetime
 import os
-from sklearn.decomposition import PCA
-from sklearn.svm import SVC
 import pickle
-from pre_process import preprocess_img
+from Assignment.pre_process import preprocess_img
+from CameraIP import cap, crop_coords
 
 # load the trained model from file
 with open('SVM.pkl', 'rb') as f:
@@ -41,7 +39,7 @@ df = pd.read_csv('attendance.csv')
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
 
 # Start the webcam
-cap = cv2.VideoCapture(0)
+# cap = cv2.VideoCapture(0)
 
 # Set the threshold for recognizing unknown faces
 threshold = 0.8
@@ -49,6 +47,10 @@ threshold = 0.8
 while True:
     # Read a frame from the webcam
     ret, frame = cap.read()
+
+    # Crop frame into image size
+    frame = frame[crop_coords[0]: crop_coords[2], crop_coords[1]: crop_coords[3]]
+
     if not ret:
         break
 

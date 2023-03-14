@@ -3,8 +3,8 @@ import subprocess
 import cv2
 import os
 import numpy as np
-from pre_process import preprocess_img
-
+from Assignment.pre_process import preprocess_img
+from CameraIP import ip, crop_coords
 
 def input_image():
 
@@ -34,7 +34,7 @@ def input_image():
         print("You have already input face for this ID.")
         return
     else:
-        print('Look at the Screen')
+        print('Look at the Camera')
 
         # Create a directory for the student's images
         if not os.path.exists(f"face_data/{name}_{id}"):
@@ -49,7 +49,7 @@ def input_image():
     j = 0
 
     # Open the webcam
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(ip)
 
     # Load the face detection classifier
     face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
@@ -57,12 +57,11 @@ def input_image():
     # Read a frame from the camera
     ret, frame = cap.read()
 
-    # Display the frame in a window
-    cv2.imshow('Show the frame', frame)
-    cv2.waitKey(2000)
+    #Crop frame into image size
+    frame = frame[crop_coords[0] : crop_coords[2], crop_coords[1] : crop_coords[3]]
 
-    # Loop over frames from the webcam and save 200 images
-    while j < 200:
+    # Loop over frames from the webcam and save 50 images
+    while j < 50:
         # Capture a frame from the webcam
         ret, frame = cap.read()
 
@@ -95,7 +94,7 @@ def input_image():
 
         # Gap between image
         cv2.imshow('Image', frame)
-        cv2.waitKey(50)
+        cv2.waitKey(1)
 
     # Loop through each face and save it with its corresponding label
     for i in range(len(face_images)):
