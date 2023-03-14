@@ -28,10 +28,6 @@ def ReadImage(ImageFolderPath):
             
     else: # If it is not folder(Invalid Path).
         print("\nEnter valid Image Folder Path.\n")
-        
-    if len(Images) < 2:
-        print("\nNot enough images found. Please provide 2 or more images.\n")
-        exit(1)
     
     return Images
 
