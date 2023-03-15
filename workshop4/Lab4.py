@@ -76,59 +76,118 @@ class Snack:
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
-def watershed(img):
-    gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-    ret, thresh = cv2.threshold(gray,0,255,cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)
+# def watershed(img):
+#     gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+#     ret, thresh = cv2.threshold(gray,0,255,cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)
 
-    # Noise removal
-    kernel = np.ones((2,2),np.uint8)
-    closing = cv2.morphologyEx(thresh,cv2.MORPH_CLOSE,kernel, iterations = 2)
-    sure_bg = cv2.dilate(closing,kernel,iterations=3)
-    # Finding sure foreground area
-    dist_transform = cv2.distanceTransform(sure_bg,cv2.DIST_L2,3)
-    # Threshold
-    ret, sure_fg = cv2.threshold(dist_transform,0.1*dist_transform.max(),255,0)
-    # Finding unknown region
-    sure_fg = np.uint8(sure_fg)
-    unknown = cv2.subtract(sure_bg,sure_fg)
-    # Marker labelling
-    ret, markers = cv2.connectedComponents(sure_fg)
-    # Add one to all labels so that sure background is not 0, but 1
-    markers = markers+1
-    # Now, mark the region of unknown with zero
-    markers[unknown==255] = 0
-    markers = cv2.watershed(img,markers)
-    img[markers == -1] = [255,0,0]
-    unknown = unknown.reshape((unknown.shape[0], unknown.shape[1], 1))
-    cv2.imshow('Unknown', unknown)
-    cv2.imshow('Watershed', img)
-    cv2.waitKey(0)  # Wait for any key press
-    cv2.destroyAllWindows()  # Close all windows
+#     # Noise removal
+#     kernel = np.ones((2,2),np.uint8)
+#     closing = cv2.morphologyEx(thresh,cv2.MORPH_CLOSE,kernel, iterations = 2)
+#     sure_bg = cv2.dilate(closing,kernel,iterations=3)
+#     # Finding sure foreground area
+#     dist_transform = cv2.distanceTransform(sure_bg,cv2.DIST_L2,3)
+#     # Threshold
+#     ret, sure_fg = cv2.threshold(dist_transform,0.1*dist_transform.max(),255,0)
+#     # Finding unknown region
+#     sure_fg = np.uint8(sure_fg)
+#     unknown = cv2.subtract(sure_bg,sure_fg)
+#     # Marker labelling
+#     ret, markers = cv2.connectedComponents(sure_fg)
+#     # Add one to all labels so that sure background is not 0, but 1
+#     markers = markers+1
+#     # Now, mark the region of unknown with zero
+#     markers[unknown==255] = 0
+#     markers = cv2.watershed(img,markers)
+#     img[markers == -1] = [255,0,0]
+#     unknown = unknown.reshape((unknown.shape[0], unknown.shape[1], 1))
+#     cv2.imshow('Unknown', unknown)
+#     cv2.imshow('Watershed', img)
+#     cv2.waitKey(0)  # Wait for any key press
+#     cv2.destroyAllWindows()  # Close all windows
 
-# def kmeans_segmentation(img, k=4, n_iter=10):
+def neighbourhood(image, x, y):
+    # Save the neighbourhood pixel's values in a dictionary
+    neighbour_region_numbers = {}
+    for i in range(-1, 2):
+        for j in range(-1, 2):
+            if (i == 0 and j == 0):
+                continue
+            if (x+i < 0 or y+j < 0): # If coordinates out of image range, skip
+                continue
+            if (x+i >= image.shape[0] or y+j >= image.shape[1]): # If coordinates out of image range, skip
+                continue
+            if (neighbour_region_numbers.get(image[x+i][y+j]) == None):
+                neighbour_region_numbers[image[x+i][y+j]] = 1 # Create entry in dictionary if not already present
+            else:
+                neighbour_region_numbers[image[x+i][y+j]] += 1 # Increase count in dictionary if already present
 
-#     # Reshape image
-#     pixel_values = img.reshape((-1, 3))
-#     pixel_values = np.float32(pixel_values)
+    # Remove the key - 0 if exists
+    if (neighbour_region_numbers.get(0) != None):
+        del neighbour_region_numbers[0]
 
-#     # Define stopping criteria
-#     criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, n_iter, 1.0)
+    # Get the keys of the dictionary
+    keys = list(neighbour_region_numbers)
 
-#     # Perform k-means clustering
-#     _, labels, centers = cv2.kmeans(pixel_values, k, None, criteria, 10, cv2.KMEANS_RANDOM_CENTERS)
+    # Sort the keys for ease of checking
+    keys.sort()
 
-#     # Convert data back to 8-bit values
-#     centers = np.uint8(centers)
-#     segmented_data = centers[labels.flatten()]
+    if (keys[0] == -1):
+        if (len(keys) == 1): # Separate region
+            return -1
+        elif (len(keys) == 2): # Part of another region
+            return keys[1]
+        else: # Watershed
+            return 0
+    else:
+        if (len(keys) == 1): # Part of another region
+            return keys[0]
+        else: # Watershed
+            return 0
 
-#     # Reshape data back to the original image dimensions
-#     segmented_image = segmented_data.reshape(img.shape)
+def watershed_segmentation(image):
+    # Create a list of pixel intensities along with their coordinates
+    intensity_list = []
+    for x in range(image.shape[0]):
+        for y in range(image.shape[1]):
+            # Append the tuple (pixel_intensity, xy-coord) to the end of the list
+            intensity_list.append((image[x][y], (x, y)))
 
-#     # Display original and segmented images
-#     cv2.imshow("Original Image", img)
-#     cv2.imshow("Segmented Image", segmented_image)
-#     cv2.waitKey(0)
-#     cv2.destroyAllWindows()
+    # Sort the list with respect to their pixel intensities, in ascending order
+    intensity_list.sort()
+
+    # Create an empty segmented_image numpy ndarray initialized to -1's
+    segmented_image = np.full(image.shape, -1, dtype=int)
+
+    # Iterate the intensity_list in ascending order and update the segmented image
+    region_number = 0
+    for i in range(len(intensity_list)):
+        # Print iteration number in terminal for clarity
+
+        # Get the pixel intensity and the x,y coordinates
+        intensity = intensity_list[i][0]
+        x = intensity_list[i][1][0]
+        y = intensity_list[i][1][1]
+
+        # Get the region number of the current pixel's region by checking its neighbouring pixels
+        region_status = neighbourhood(segmented_image, x, y)
+
+        # Assign region number (or) watershed accordingly, at pixel (x, y) of the segmented image
+        if (region_status == -1): # Separate region
+            region_number += 1
+            segmented_image[x][y] = region_number
+        elif (region_status == 0): # Watershed
+            segmented_image[x][y] = 0
+        else: # Part of another region
+            segmented_image[x][y] = region_status
+
+    # Return the segmented image
+    cv2.imwrite("target.png", segmented_image)
+    seg_image = cv2.resize(cv2.imread("target.png", 0), (0,0), None, 1, 1)
+    cv2.imshow('original', image)
+    cv2.imshow('new image', seg_image)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
 
 np.random.seed(42)
 
@@ -232,12 +291,10 @@ class KMeans():
     def run(self):
         pixel_values = self.image.reshape((-1, 3))
         pixel_values = np.float32(pixel_values)
-        k = KMeans(self.image, K=4, max_iters=10)
-        y_pred = k.predict(pixel_values)
-        y_pred = y_pred.astype(int)
-
-        k.cent()
+        k = KMeans(self.image, self.K, self.max_iters)
+        y_pred = k.predict(pixel_values).astype(int)
         centers = np.uint8(k.cent())
+
         labels = y_pred.flatten()
         segmented_image = centers[labels.flatten()]
         segmented_image = segmented_image.reshape(self.image.shape)
@@ -431,7 +488,9 @@ def main():
 
         elif choice == 2:
             print("Watershed Algorithm for Image Segmentation selected.")
-            watershed(image)
+            # watershed(image)
+            image_gray = cv2.imread(image_path, 0)
+            watershed_segmentation(image_gray)
 
         elif choice == 3:
             print("K-Means for Segmentation selected.")
