@@ -1,9 +1,39 @@
 import cv2
+import os
+from tkinter import *
+from tkinter import Tk
+from tkinter import ttk
+from tkinter.filedialog import askdirectory
+
+def ReadImage(ImageFolderPath):
+    Images = [] # Input Images will be stored in this list.
+
+	# Checking if path is of folder.
+    if os.path.isdir(ImageFolderPath): # If path is of a folder contaning images.
+        ImageNames = os.listdir(ImageFolderPath)
+        ImageNames_Split = [[(os.path.splitext(os.path.basename(ImageName))[0]), ImageName] for ImageName in ImageNames]
+        ImageNames_Sorted = [ImageNames_Split[i][1] for i in range(len(ImageNames_Split))]
+        
+        for i in range(len(ImageNames_Sorted)): # Getting all image's name present inside the folder.
+            ImageName = ImageNames_Sorted[i]
+            InputImage = ImageName  # Reading images one by one.
+            
+            # Checking if image is read
+            if InputImage is None:
+                print("Not able to read image: {}".format(ImageName))
+                exit(0)
+
+            Images.append(InputImage) # Storing images.
+            
+    else: # If it is not folder(Invalid Path).
+        print("\nEnter valid Image Folder Path.\n")
+    
+    return Images
 
 def face_detection(image):
 
     # Load the face detection classifier
-    face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+    face_cascade = cv2.CascadeClassifier('/media/va/New Volume/FPT/SPRING23/CPV301/CPV301_code/CPV/workshop7/Haar-Training/Haar Training/cascade2xml/myfacedetector.xml')
 
     # Convert the input image to grayscale
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -17,66 +47,41 @@ def face_detection(image):
 
     return image
 
-def on_button_click(event, x, y, flags, param):
-    global img
-    global button_hover
-    global button_text
+def choose():
+    global dataset_path
+    path = askdirectory(title='Select folder')
+    dataset_path = str(path)
+    # Reading images
+    Images = ReadImage(str(path))
+    text = Text(root, width=30, height=15)
+    text.pack()
+    for image in Images:
+        text.insert(END, image + ' \n')
+    
+def main_prog():
+    global dataset_path
+    fname = file_name.get()
+    dataset_path = dataset_path + '/'
+    raw_img = cv2.imread(dataset_path + fname)
+    cv2.imshow('Original', raw_img)
+    img = face_detection(raw_img)
+    cv2.imshow('Detected', img)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
 
-    if event == cv2.EVENT_LBUTTONDOWN:
-        if 10 <= x and x <= 10 + button_size[0] and 10 <= y and y <= 10 + button_size[1]:
-            if button_text == 'DETECT FACE':
-                print("Face Detect")
-                img = face_detection(img)
 
-# Load the input image
-raw_img = cv2.imread('hoahau.jpg')
-img = raw_img
+root = Tk()
+root.title('Face Detection')
+root.geometry('400x300')
 
-# Create the window
-window_name = 'Face Detecter'
-cv2.namedWindow(window_name)
+file_name = ttk.Entry(root)
+comment = Label(root, text="After choosing a folder,\n input a file name from the list that pop up below\n Then hit DETECT FACES!!!")
+choose_button = ttk.Button(root, text='Select Folder', command=choose)
+run_button = ttk.Button(root, text='DETECT FACES!!!', command=main_prog)
 
-# Get the size of the combined image
-height, width, _ = img.shape
+choose_button.pack(expand=True, pady=30)
+comment.pack()
+file_name.pack()
+run_button.pack()
 
-# Define button properties
-button_text = "DETECT FACE"
-button_font = cv2.FONT_ITALIC
-button_font_scale = 0.6
-button_thickness = 1
-button_padding = 10
-button_color = (255, 0, 0)
-button_hover_color = (0, 255, 0)
-
-# Get button size and position
-button_size, _ = cv2.getTextSize(button_text, button_font, button_font_scale, button_thickness)
-button_rect = ((0, 0), (button_size[0] + button_padding*2, button_size[1] + button_padding*2))
-
-# Initialize button hover state
-button_hover = False
-
-# Show the image with the button
-cv2.setMouseCallback(window_name, on_button_click)
-
-# Wait for a button click
-while True:
-    #Display the combined image
-    cv2.imshow(window_name, img)
-
-    # Draw button
-    if button_hover:
-        button_text_color = button_hover_color
-    else:
-        button_text_color = button_color
-    cv2.rectangle(img, button_rect[0], button_rect[1], button_text_color, -1)
-    cv2.putText(img, button_text,
-                (button_rect[0][0] + button_padding, button_rect[0][1] + button_size[1] + button_padding), button_font,
-                button_font_scale, (255, 255, 255), button_thickness, cv2.LINE_AA)
-
-    # Check for key events
-    key = cv2.waitKey(1)
-    if key == ord("q"):
-        break
-
-# Close the window
-cv2.destroyAllWindows()
+root.mainloop()

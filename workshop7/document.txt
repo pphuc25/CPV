@@ -1,0 +1,2 @@
+Creating a Cascade of Haar-Like Classifiers (Create our own Haar Cascade XML file): https://www.cs.auckland.ac.nz/~m.rezaei/Tutorials/Creating_a_Cascade_of_Haar-Like_Classifiers_Step_by_Step.pdf
+Or we can do like this (but the ImageNet somehow don't let me in so ...): https://pythonprogramming.net/haar-cascade-object-detection-python-opencv-tutorial/
