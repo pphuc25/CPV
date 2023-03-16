@@ -50,7 +50,7 @@ def upsize(img, scale_percent):
     return upsized
 
 def recogniser(img, train_image_names, mean_face, proj_data, w):
-    unknown_face = plt.imread('Dataset/'+img)
+    unknown_face = plt.imread('Pos/'+img)
     unknown_face_vector = np.array(unknown_face, dtype='float64').flatten()
     normalised_uface_vector = np.subtract(unknown_face_vector, mean_face)
 
@@ -61,7 +61,7 @@ def recogniser(img, train_image_names, mean_face, proj_data, w):
     thickness = 3
 
     # Show input image
-    input_img = cv2.imread('Dataset/' + img)
+    input_img = cv2.imread('Pos/' + img)
     input_img = upsize(input_img, 200)
     input_img = cv2.putText(input_img, 'Input:'+'.'.join(img.split('.')[:2]),
                       org, font, fontScale, (255, 0, 0), thickness, cv2.LINE_AA)
@@ -83,7 +83,7 @@ def recogniser(img, train_image_names, mean_face, proj_data, w):
                 color = (0, 255, 0)
             else:
                 color = (0, 0, 255)
-            image = cv2.imread('Dataset/' + train_image_names[index])
+            image = cv2.imread('Pos/' + train_image_names[index])
             image = upsize(image, 200)
             image = cv2.putText(image, 'Matched:'+'.'.join(train_image_names[index].split('.')[:2]),
                                 org, font, fontScale, color, thickness, cv2.LINE_AA)

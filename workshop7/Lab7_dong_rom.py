@@ -1,51 +1,77 @@
+import os
 import cv2
 import numpy as np
 from PIL import Image
 from scipy import ndimage
+from sklearn.calibration import CalibratedClassifierCV
+from sklearn.svm import LinearSVC, SVC
+
 
 def face_detection(image):
-    # Convert image to grayscale
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    # Define paths to positive and negative image folders
+    pos_folder = 'Pos'
+    neg_folder = 'Neg'
 
-    # Apply a Gaussian blur to the image to reduce noise
-    blur = cv2.GaussianBlur(gray, (5, 5), 0)
+    # Load positive and negative images
+    pos_imgs = []
+    for filename in os.listdir(pos_folder):
+        if filename.endswith('.jpg'):
+            img_path = os.path.join(pos_folder, filename)
+            img = cv2.imread(img_path)
+            pos_imgs.append(img)
 
-    # Apply a Sobel filter to the blurred image to detect edges
-    sobel_x = cv2.Sobel(blur, cv2.CV_64F, 1, 0, ksize=3)
-    sobel_y = cv2.Sobel(blur, cv2.CV_64F, 0, 1, ksize=3)
-    edges = np.sqrt(np.square(sobel_x) + np.square(sobel_y))
-    edges = (edges / np.max(edges)) * 255
-    edges = edges.astype(np.uint8)
+    neg_imgs = []
+    for filename in os.listdir(neg_folder):
+        if filename.endswith('.jpg'):
+            img_path = os.path.join(neg_folder, filename)
+            img = cv2.imread(img_path)
+            neg_imgs.append(img)
 
-    # Threshold the edges to obtain a binary image
-    threshold_value, binary = cv2.threshold(edges, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    # Define HOG parameters
+    win_size = (64, 128)
+    block_size = (16, 16)
+    block_stride = (8, 8)
+    cell_size = (8, 8)
+    nbins = 9
 
-    # Erode and dilate the binary image to remove noise and fill gaps
-    kernel = np.ones((3, 3), np.uint8)
-    binary = cv2.erode(binary, kernel, iterations=1)
-    binary = cv2.dilate(binary, kernel, iterations=1)
+    # Compute HOG features for positive and negative training images
+    hog = cv2.HOGDescriptor(win_size, block_size, block_stride, cell_size, nbins)
+    pos_feats = [hog.compute(cv2.resize(img, win_size)) for img in pos_imgs]
+    neg_feats = [hog.compute(cv2.resize(img, win_size)) for img in neg_imgs]
 
-    # Find contours in the binary image
-    contours, hierarchy = cv2.findContours(binary, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    # Concatenate positive and negative features and labels
+    X = np.concatenate((np.array(pos_feats), np.array(neg_feats)), axis=0)
+    y = np.concatenate((np.ones(len(pos_feats)), np.zeros(len(neg_feats))), axis=0)
 
-    # Find the contour with the largest area
-    max_area = 0
-    max_contour = None
-    for contour in contours:
-        area = cv2.contourArea(contour)
-        if area > max_area:
-            max_area = area
-            max_contour = contour
+    # Train SVM classifier with probability estimates
+    clf = LinearSVC()
+    clf.fit(X, y)
 
-    # Find the minimum rectangle that can fit around the contour
-    rect = cv2.minAreaRect(max_contour)
-    box = cv2.boxPoints(rect)
-    box = np.int0(box)
+    # Wrap the model in CalibratedClassifierCV to enable probability estimates
+    calibrated_clf = CalibratedClassifierCV(clf, cv=5, method='sigmoid')
+    calibrated_clf.fit(X, y)
 
-    # Draw the rectangle around the face
-    cv2.drawContours(image, [box], 0, (0, 255, 0), 2)
+    # Load test image and perform sliding window object detection
+    test_image = image
+    window_size = (64, 128)
+    stride = 8
+    threshold = 0.905
+    detections = []
+    for y in range(0, test_image.shape[0] - window_size[1], stride):
+        for x in range(0, test_image.shape[1] - window_size[0], stride):
+            window = test_image[y:y + window_size[1], x:x + window_size[0]]
+            hog_feat = hog.compute(cv2.resize(window, win_size))
+            class_probabilities = calibrated_clf.predict_proba([hog_feat])
+            print(class_probabilities)
+            if np.max(class_probabilities) > threshold:
+                detections.append((x, y, window_size[0], window_size[1]))
 
-    return image
+    # Draw bounding boxes around detected objects
+    for detection in detections:
+        x, y, w, h = detection
+        cv2.rectangle(test_image, (x, y), (x + w, y + h), (0, 255, 0), 2)
+
+    return test_image
 
 def on_button_click(event, x, y, flags, param):
     global img
@@ -60,7 +86,7 @@ def on_button_click(event, x, y, flags, param):
                 img = face_detection(img)
 
 # Load the input image
-raw_img = cv2.imread('face.jpg')
+raw_img = cv2.imread('hoahau.jpg')
 img = raw_img
 
 # Create the window
