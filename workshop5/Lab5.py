@@ -61,7 +61,7 @@ def on_button_click(event, x, y, flags, param):
                 combined_image = cv2.hconcat([image1, image2])
 
 # Load the two images
-image1 = cv2.imread("book.png")
+image1 = cv2.imread("book1.png")
 image2 = cv2.imread("book2.png")
 
 # aligned_img = ransac_image_alignment(img1, img2, 'ORB', 'BFMatcher')
