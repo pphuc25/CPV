@@ -2,7 +2,7 @@ import numpy as np
 import cv2
 
 # Load image as grayscale
-# img = cv2.imread('chess.png')
+img = cv2.imread('chess.png')
 
 def hough_transform(img):
     # Convert image to grayscale
@@ -37,5 +37,5 @@ def hough_transform(img):
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
-# img = hough_transform(img)
+img = hough_transform(img)
 

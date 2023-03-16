@@ -1,61 +1,49 @@
 import cv2
 import numpy as np
+from PIL import Image
+from scipy import ndimage
 
 def face_detection(image):
-
-    face_kernel = np.array([
-        [ 1,  1,  1,  1,  1],
-        [ 1, -1, -1, -1,  1],
-        [ 1, -1, -1, -1,  1],
-        [ 1, -1, -1, -1,  1],
-        [ 1,  1,  1,  1,  1],
-    ])
-
-    # Load the input image
-    # image = cv2.imread("workshop7/hoahau.jpg")
-
-    # Convert the input image to grayscale
+    # Convert image to grayscale
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-    # Define the window size and the stride of the kernel
-    win_w, win_h = face_kernel.shape
-    stride = 2
+    # Apply a Gaussian blur to the image to reduce noise
+    blur = cv2.GaussianBlur(gray, (5, 5), 0)
 
-    # Initialize an array to store the scores for each window
-    scores = np.zeros_like(gray, dtype=np.float32)
+    # Apply a Sobel filter to the blurred image to detect edges
+    sobel_x = cv2.Sobel(blur, cv2.CV_64F, 1, 0, ksize=3)
+    sobel_y = cv2.Sobel(blur, cv2.CV_64F, 0, 1, ksize=3)
+    edges = np.sqrt(np.square(sobel_x) + np.square(sobel_y))
+    edges = (edges / np.max(edges)) * 255
+    edges = edges.astype(np.uint8)
 
-    # Calculate the integral image
-    int_img = cv2.integral(gray)
+    # Threshold the edges to obtain a binary image
+    threshold_value, binary = cv2.threshold(edges, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
 
-    face_cascade = cv2.CascadeClassifier(button_)
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    face = face_cascade.detectMultiScale(gray, scaleFactor=1.3, minNeighbors=3)
-    for y in range(0, gray.shape[0] - win_h, stride):
-        for x in range(0, gray.shape[1] - win_w, stride):
-            
-            # Extract the window from the integral image
-            i = y + win_h
-            j = x + win_w
-            window_sum = int_img[i, j] - int_img[i, x] - int_img[y, j] + int_img[y, x]
-            window = gray[y:y+win_h, x:x+win_w]
-            
-            # Calculate the score for the window using the Haar Cascade kernel
-            score = np.sum(window * face_kernel) / np.sqrt(np.sum(window ** 2))
-            scores[y, x] = score
+    # Erode and dilate the binary image to remove noise and fill gaps
+    kernel = np.ones((3, 3), np.uint8)
+    binary = cv2.erode(binary, kernel, iterations=1)
+    binary = cv2.dilate(binary, kernel, iterations=1)
 
-    # Find the local maxima in the scores
-    maxima = cv2.dilate(scores, np.ones((3,3))) == scores
-    maxima = maxima.astype(np.uint8)
+    # Find contours in the binary image
+    contours, hierarchy = cv2.findContours(binary, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
-    # Draw rectangles around the detected faces in the original color image
-    faces = []
-    for y, x in np.argwhere(maxima):
-        faces.append((x, y, win_w, win_h))
+    # Find the contour with the largest area
+    max_area = 0
+    max_contour = None
+    for contour in contours:
+        area = cv2.contourArea(contour)
+        if area > max_area:
+            max_area = area
+            max_contour = contour
 
+    # Find the minimum rectangle that can fit around the contour
+    rect = cv2.minAreaRect(max_contour)
+    box = cv2.boxPoints(rect)
+    box = np.int0(box)
 
-    # Return face direction
-    for (x, y, w, h) in face:
-        cv2.rectangle(image, (x, y), (x+w, y+h), (0, 255, 0), 2)
+    # Draw the rectangle around the face
+    cv2.drawContours(image, [box], 0, (0, 255, 0), 2)
 
     return image
 
@@ -72,7 +60,7 @@ def on_button_click(event, x, y, flags, param):
                 img = face_detection(img)
 
 # Load the input image
-raw_img = cv2.imread('workshop7/hoahau.jpg')
+raw_img = cv2.imread('face.jpg')
 img = raw_img
 
 # Create the window

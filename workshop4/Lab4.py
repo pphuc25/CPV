@@ -473,7 +473,7 @@ def main():
     print("Please select a function from the following options:")
 
     while True:
-        image_path = 'workshop4/road.jpg'
+        image_path = 'road.jpg'
         image = cv2.imread(image_path)
         print("1. Snakes Algorithm for Active Contours")
         print("2. Watershed Algorithm for Image Segmentation")
@@ -495,7 +495,6 @@ def main():
         elif choice == 3:
             print("K-Means for Segmentation selected.")
             KMeans(image, K=4, max_iters=10).run()
-
 
         elif choice == 4:
             print("Mean Shift for Peak Detection selected.")

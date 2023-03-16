@@ -225,8 +225,8 @@ def MeanFilter(image):
             result = 0
     return output
 
-def mean_filter(raw_image):
-    image = raw_image
+def mean_filter(raw_image2):
+    image = raw_image2
     # Add salt and pepper noise
     image = add_salt_and_pepper_noise(image)
     # Perform mean filtering to remove salt and pepper noise
@@ -284,6 +284,7 @@ if __name__ == '__main__':
 
         elif choice == 4:
             # Perform mean filtering
+            ori_image = cv2.imread('test_CPV.jpeg')
             mean_filter(ori_image)
 
         elif choice == 5:
