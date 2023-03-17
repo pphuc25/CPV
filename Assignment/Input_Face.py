@@ -4,7 +4,11 @@ import cv2
 import os
 import numpy as np
 from Assignment.pre_process import preprocess_img
-from CameraIP import ip, crop_coords
+
+ip = "rtsp://admin:ZSXNWK@192.168.225.155:554/H.264"
+
+# Define the cropping coordinates (left, top, right, bottom)
+crop_coords = (1080//2 - 360, 1920//2 - 480, 1080//2 + 360, 1920//2 + 480)
 
 def input_image():
 
@@ -60,8 +64,8 @@ def input_image():
     #Crop frame into image size
     frame = frame[crop_coords[0] : crop_coords[2], crop_coords[1] : crop_coords[3]]
 
-    # Loop over frames from the webcam and save 50 images
-    while j < 50:
+    # Loop over frames from the webcam and save 150 images
+    while j < 150:
         # Capture a frame from the webcam
         ret, frame = cap.read()
 

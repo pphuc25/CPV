@@ -5,7 +5,14 @@ import pandas as pd
 import os
 import pickle
 from Assignment.pre_process import preprocess_img
-from CameraIP import cap, crop_coords
+
+ip = "rtsp://admin:ZSXNWK@192.168.225.155:554/H.264"
+
+cap = cv2.VideoCapture(ip)
+cap.set(cv2.CAP_PROP_FPS, 10)  # set frame rate to 10 fps
+
+# Define the cropping coordinates (left, top, right, bottom)
+crop_coords = (1080//2 - 360, 1920//2 - 480, 1080//2 + 360, 1920//2 + 480)
 
 # load the trained model from file
 with open('SVM.pkl', 'rb') as f:
@@ -95,7 +102,7 @@ while True:
     cv2.imshow('Face Recognition', frame)
 
     # Exit the program if the 'q' key is pressed
-    if cv2.waitKey(1) & 0xFF == ord('q'):
+    if cv2.waitKey(1000) & 0xFF == ord('q'):
 
         # Save updated dataframe back to CSV file
         df.to_csv('attendance.csv', index=False)

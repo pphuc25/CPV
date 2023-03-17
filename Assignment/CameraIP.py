@@ -1,7 +1,7 @@
 import cv2
 
 # ip = 'rtsp://admin:admin@192.168.2.2::/cam/realmonitor?channel=1&subtype=1'
-ip = "rtsp://admin:ZSXNWK@192.168.2.10:554/H.264"
+ip = "rtsp://admin:ZSXNWK@192.168.225.155:554/H.264"
 
 cap = cv2.VideoCapture(ip)
 
