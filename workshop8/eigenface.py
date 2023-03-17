@@ -49,8 +49,8 @@ def upsize(img, scale_percent):
     upsized = cv2.resize(img, dim, interpolation = cv2.INTER_AREA)
     return upsized
 
-def recogniser(img, train_image_names, mean_face, proj_data, w):
-    unknown_face = plt.imread('Pos/'+img)
+def recogniser(img, data_path, train_image_names, mean_face, proj_data, w):
+    unknown_face = plt.imread(img)
     unknown_face_vector = np.array(unknown_face, dtype='float64').flatten()
     normalised_uface_vector = np.subtract(unknown_face_vector, mean_face)
 
@@ -61,7 +61,7 @@ def recogniser(img, train_image_names, mean_face, proj_data, w):
     thickness = 3
 
     # Show input image
-    input_img = cv2.imread('Pos/' + img)
+    input_img = cv2.imread(img)
     input_img = upsize(input_img, 200)
     input_img = cv2.putText(input_img, 'Input:'+'.'.join(img.split('.')[:2]),
                       org, font, fontScale, (255, 0, 0), thickness, cv2.LINE_AA)
@@ -83,7 +83,7 @@ def recogniser(img, train_image_names, mean_face, proj_data, w):
                 color = (0, 255, 0)
             else:
                 color = (0, 0, 255)
-            image = cv2.imread('Pos/' + train_image_names[index])
+            image = cv2.imread(data_path + train_image_names[index])
             image = upsize(image, 200)
             image = cv2.putText(image, 'Matched:'+'.'.join(train_image_names[index].split('.')[:2]),
                                 org, font, fontScale, color, thickness, cv2.LINE_AA)
@@ -93,7 +93,7 @@ def recogniser(img, train_image_names, mean_face, proj_data, w):
                 color = (0, 255, 0)
             else:
                 color = (0, 0, 255)
-            image = cv2.imread('unknown.jpg')
+            image = cv2.imread('/media/va/New Volume/FPT/SPRING23/CPV301/CPV301_code/CPV/workshop8/unknown.jpg')
             image = upsize(image, 200)
             image = cv2.putText(image, 'Unknown face!', org, font, fontScale, color, thickness, cv2.LINE_AA)
             cv2.imshow('Result',image)
@@ -102,7 +102,7 @@ def recogniser(img, train_image_names, mean_face, proj_data, w):
             color = (0, 0, 255)
         else:
             color = (0, 255, 0)
-        image = cv2.imread('noface.jpg')
+        image = cv2.imread('/media/va/New Volume/FPT/SPRING23/CPV301/CPV301_code/CPV/workshop8/noface.jpg')
         image = upsize(image, 200)
         image = cv2.putText(image, 'Not a face!', org, font, fontScale, color, thickness, cv2.LINE_AA)
         cv2.imshow('Result',image)

@@ -61,7 +61,7 @@ def main_prog():
     dataset_path = dataset_path + '/'
     dataset_dir  = os.listdir(dataset_path)
     mean_face, proj_data, w = calculation(width, height, dataset_path, train_image_names)
-    recogniser(fname, train_image_names, mean_face, proj_data, w)
+    recogniser(dataset_path + fname, dataset_path, train_image_names, mean_face, proj_data, w)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 

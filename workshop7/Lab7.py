@@ -33,13 +33,13 @@ def ReadImage(ImageFolderPath):
 def face_detection(image):
 
     # Load the face detection classifier
-    face_cascade = cv2.CascadeClassifier('Haar-Training/Haar Training/cascade2xml/myfacedetector.xml')
+    face_cascade = cv2.CascadeClassifier('/media/va/New Volume/FPT/SPRING23/CPV301/CPV301_code/CPV/workshop7/Haar-Training/Haar_Training/cascade2xml/myfacedetector.xml')
 
     # Convert the input image to grayscale
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
     # Detect faces in the image
-    faces = face_cascade.detectMultiScale(gray, scaleFactor=1.3, minNeighbors=5)
+    faces = face_cascade.detectMultiScale(gray, scaleFactor=1.3, minNeighbors=3)
 
     # Draw rectangles around the detected faces in the original color image
     for (x, y, w, h) in faces:
