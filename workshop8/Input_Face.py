@@ -11,6 +11,22 @@ crop_coords = (1080//2 - 360, 1920//2 - 480, 1080//2 + 360, 1920//2 + 480)
 
 def input_image():
 
+    test_file = 'D:\FPT\SPRING23\CPV301\CPV301_code\CPV\workshop8\Test'
+
+    # Get the existing names and IDs of the students
+    names = []
+    for name in os.listdir(test_file):
+        names.append(name)
+
+    # Get the name and id of the student from the user
+    name = input("Enter file name: ")
+
+    if name in names:
+        print("Duplicate file name!")
+        return
+    else:
+        print('Look at the Camera')
+
     # Initalize face list
     face_images = []
     size = (64, 64)  # desired size of the resized images
@@ -64,9 +80,8 @@ def input_image():
         cv2.waitKey(1)
 
     # Loop through each face and save it
-    for i in range(len(face_images)):
-        image_path = os.path.join('D:\FPT\SPRING23\CPV301\CPV301_code\CPV\workshop8\Test', f'face_{i}.png')
-        print(image_path)
+    for i in face_images:
+        image_path = os.path.join('D:\FPT\SPRING23\CPV301\CPV301_code\CPV\workshop8\Test', f'{name}.png')
         cv2.imwrite(image_path, face_images[i])
 
     # Release the webcam and close all windows
