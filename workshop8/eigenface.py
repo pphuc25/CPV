@@ -62,7 +62,7 @@ def recogniser(img, data_path, train_image_names, mean_face, proj_data, w):
 
     # Show input image
     input_img = cv2.imread(img)
-    input_img = upsize(input_img, 200)
+    input_img = upsize(input_img, 500)
     input_img = cv2.putText(input_img, 'Input:'+'.'.join(img.split('.')[:2]),
                       org, font, fontScale, (255, 0, 0), thickness, cv2.LINE_AA)
     cv2.imshow('Input', input_img)
@@ -84,7 +84,7 @@ def recogniser(img, data_path, train_image_names, mean_face, proj_data, w):
             else:
                 color = (0, 0, 255)
             image = cv2.imread(data_path + train_image_names[index])
-            image = upsize(image, 200)
+            image = upsize(image, 500)
             image = cv2.putText(image, 'Matched:'+'.'.join(train_image_names[index].split('.')[:2]),
                                 org, font, fontScale, color, thickness, cv2.LINE_AA)
             cv2.imshow('Result',image)
@@ -93,8 +93,8 @@ def recogniser(img, data_path, train_image_names, mean_face, proj_data, w):
                 color = (0, 255, 0)
             else:
                 color = (0, 0, 255)
-            image = cv2.imread('/media/va/New Volume/FPT/SPRING23/CPV301/CPV301_code/CPV/workshop8/unknown.jpg')
-            image = upsize(image, 200)
+            image = cv2.imread('unknown.jpg')
+            image = upsize(image, 00)
             image = cv2.putText(image, 'Unknown face!', org, font, fontScale, color, thickness, cv2.LINE_AA)
             cv2.imshow('Result',image)
     else:   
@@ -102,7 +102,7 @@ def recogniser(img, data_path, train_image_names, mean_face, proj_data, w):
             color = (0, 0, 255)
         else:
             color = (0, 255, 0)
-        image = cv2.imread('/media/va/New Volume/FPT/SPRING23/CPV301/CPV301_code/CPV/workshop8/noface.jpg')
+        image = cv2.imread('noface.jpg')
         image = upsize(image, 200)
         image = cv2.putText(image, 'Not a face!', org, font, fontScale, color, thickness, cv2.LINE_AA)
         cv2.imshow('Result',image)

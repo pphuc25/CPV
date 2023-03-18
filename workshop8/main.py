@@ -35,14 +35,13 @@ def ReadImage(ImageFolderPath):
 # *** ALL OF THE IMAGES IN THE DATASET HAVE TO BE IN THE SAME SIZE IN ORDER TO CALCULATE ***
 # Each image in the dataset is crop to the size of 195 x 231 (width x height) pixels 
 # and each pixel uses 8 bits for grayscale
-width  = 195
-height = 231
+width  = 64
+height = 64
 
 # Choose which images is used for training
-train_image_names = ['subject01.normal.jpg', 'subject02.normal.jpg', 
-                     'subject03.normal.jpg', 'subject07.normal.jpg', 
-                     'subject10.normal.jpg', 'subject11.normal.jpg', 
-                     'subject14.normal.jpg', 'subject15.normal.jpg']
+train_path = 'D:\FPT\SPRING23\CPV301\CPV301_code\CPV\workshop8\CPV\Train'
+train_image_names = os.listdir(train_path)
+
 
 def choose():
     global dataset_path
