@@ -74,8 +74,8 @@ def recogniser(img, data_path, train_image_names, mean_face, proj_data, w):
     index = np.argmin(norms)
 
     # Choose threshold
-    t1 = 100111536
-    t0 = 88831687
+    t1 = 100000
+    t0 = 8000
     
     if norms[index] < t1:
         if norms[index] < t0: # It's a face
@@ -93,7 +93,7 @@ def recogniser(img, data_path, train_image_names, mean_face, proj_data, w):
                 color = (0, 255, 0)
             else:
                 color = (0, 0, 255)
-            image = cv2.imread('unknown.jpg')
+            image = cv2.imread(r"D:\FPT\SPRING23\CPV301\CPV301_code\CPV\workshop8\unknown.jpg")
             image = upsize(image, 00)
             image = cv2.putText(image, 'Unknown face!', org, font, fontScale, color, thickness, cv2.LINE_AA)
             cv2.imshow('Result',image)
@@ -102,7 +102,7 @@ def recogniser(img, data_path, train_image_names, mean_face, proj_data, w):
             color = (0, 0, 255)
         else:
             color = (0, 255, 0)
-        image = cv2.imread('noface.jpg')
+        image = cv2.imread(r"D:\FPT\SPRING23\CPV301\CPV301_code\CPV\workshop8\noface.jpg")
         image = upsize(image, 200)
         image = cv2.putText(image, 'Not a face!', org, font, fontScale, color, thickness, cv2.LINE_AA)
         cv2.imshow('Result',image)

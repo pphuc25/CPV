@@ -11,43 +11,8 @@ crop_coords = (1080//2 - 360, 1920//2 - 480, 1080//2 + 360, 1920//2 + 480)
 
 def input_image():
 
-    # Create a directory to save the images and labels
-    os.makedirs('face_data', exist_ok=True)
-
-    # Get the existing names and IDs of the students
-    names = []
-    IDs = []
-    for directory in os.listdir("face_data"):
-        if os.path.isdir(os.path.join("face_data", directory)):
-            name, id = directory.split("_")
-            names.append(name)
-            IDs.append(id)
-
-    # Get the name and id of the student from the user
-    name = input("Enter the name of student: ")
-    while True:
-        id = input("Enter the ID of student (format: SE******): ")
-        if re.match(r'^SE\d{6}$', id):
-            break
-        else:
-            print("Invalid format. Please enter the ID in the format SE******.")
-
-    # Check if the ID is already in the folder
-    if id in IDs:
-        print("You have already input face for this ID.")
-        return
-    else:
-        print('Look at the Camera')
-
-        # Create a directory for the student's images
-        if not os.path.exists(f"face_data/{name}_{id}"):
-            os.makedirs(f"face_data/{name}_{id}")
-
-    student = name + '_' + id
-
     # Initalize face list
     face_images = []
-    face_labels = []
     size = (64, 64)  # desired size of the resized images
     j = 0
 
@@ -64,7 +29,7 @@ def input_image():
     frame = frame[crop_coords[0] : crop_coords[2], crop_coords[1] : crop_coords[3]]
 
     # Loop over frames from the webcam and save 150 images
-    while j <= 1:
+    while j < 1:
         # Capture a frame from the webcam
         ret, frame = cap.read()
 
@@ -90,7 +55,6 @@ def input_image():
 
             # Store face of each studentq
             face_images.append(face_img)
-            face_labels.append(student)
 
             # Count face
             j += 1
@@ -99,14 +63,10 @@ def input_image():
         cv2.imshow('Image', frame)
         cv2.waitKey(1)
 
-    # Loop through each face and save it with its corresponding label
+    # Loop through each face and save it
     for i in range(len(face_images)):
-        # Create a subdirectory with the label name
-        label_dir = os.path.join('face_data', str(face_labels[i]))
-        os.makedirs(label_dir, exist_ok=True)
-
-        # Save the face image in the label subdirectory
-        image_path = os.path.join(label_dir, f'face_{i}.png')
+        image_path = os.path.join('D:\FPT\SPRING23\CPV301\CPV301_code\CPV\workshop8\Test', f'face_{i}.png')
+        print(image_path)
         cv2.imwrite(image_path, face_images[i])
 
     # Release the webcam and close all windows
