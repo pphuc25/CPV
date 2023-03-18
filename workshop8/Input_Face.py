@@ -11,7 +11,7 @@ crop_coords = (1080//2 - 360, 1920//2 - 480, 1080//2 + 360, 1920//2 + 480)
 
 def input_image():
 
-    test_file = 'D:\FPT\SPRING23\CPV301\CPV301_code\CPV\workshop8\Test'
+    test_file = 'D:\FPT\SPRING23\CPV301\CPV301_code\CPV\workshop8\Test1'
 
     # Get the existing names and IDs of the students
     names = []
@@ -81,7 +81,7 @@ def input_image():
 
     # Loop through each face and save it
     for i in face_images:
-        image_path = os.path.join('D:\FPT\SPRING23\CPV301\CPV301_code\CPV\workshop8\Test', f'{name}.png')
+        image_path = os.path.join('D:\FPT\SPRING23\CPV301\CPV301_code\CPV\workshop8\Test1', f'{name}.png')
         cv2.imwrite(image_path, face_images[i])
 
     # Release the webcam and close all windows
