@@ -39,7 +39,7 @@ width  = 64
 height = 64
 
 # Choose which images is used for training
-train_path = 'D:\FPT\SPRING23\CPV301\CPV301_code\CPV\workshop8\Train'
+train_path = 'D:\FPT\SPRING23\CPV301\CPV301_code\CPV\workshop8\Train1'
 train_image_names = os.listdir(train_path)
 
 
