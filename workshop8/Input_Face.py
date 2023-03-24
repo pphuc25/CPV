@@ -80,7 +80,7 @@ def input_image():
         cv2.waitKey(1)
 
     # Loop through each face and save it
-    for i in face_images:
+    for i in range(len(face_images)):
         image_path = os.path.join('D:\FPT\SPRING23\CPV301\CPV301_code\CPV\workshop8\Test1', f'{name}.png')
         cv2.imwrite(image_path, face_images[i])
 

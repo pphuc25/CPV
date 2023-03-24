@@ -74,8 +74,8 @@ def recogniser(img, data_path, train_image_names, mean_face, proj_data, w):
     index = np.argmin(norms)
 
     # Choose threshold
-    t1 = 1000000
-    t0 = 80000
+    t1 = 500
+    t0 = 100
     
     if norms[index] < t1:
         if norms[index] < t0: # It's a face
