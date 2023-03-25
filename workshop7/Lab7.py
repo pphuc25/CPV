@@ -33,7 +33,7 @@ def ReadImage(ImageFolderPath):
 def face_detection(image):
 
     # Load the face detection classifier
-    face_cascade = cv2.CascadeClassifier('/media/va/New Volume/FPT/SPRING23/CPV301/CPV301_code/CPV/workshop7/Haar-Training/Haar_Training/cascade2xml/myfacedetector.xml')
+    face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 
     # Convert the input image to grayscale
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)

@@ -74,7 +74,7 @@ def recogniser(img, data_path, train_image_names, mean_face, proj_data, w):
     index = np.argmin(norms)
 
     # Choose threshold
-    t1 = 500
+    t1 = 1000
     t0 = 100
     
     if norms[index] < t1:
